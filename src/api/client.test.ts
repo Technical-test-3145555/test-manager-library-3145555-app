@@ -27,7 +27,7 @@ describe('api client', () => {
   it('turns the single error body into an ApiError with code, message and details', async () => {
     vi.stubGlobal('fetch', vi.fn(() => respond(409, { code: 'ISBN_TAKEN', message: 'Ya existe un libro activo con ese ISBN.', details: [{ field: 'isbn', issue: 'repetido' }] })));
 
-    const error = await api.post('/books', {}).catch((e) => e);
+    const error = (await api.post('/books', {}).catch((e: unknown) => e)) as ApiError;
 
     expect(error).toBeInstanceOf(ApiError);
     expect(error.status).toBe(409);
@@ -59,7 +59,7 @@ describe('api client', () => {
 
   it('reports a network failure in Spanish and returns undefined on 204', async () => {
     vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new TypeError('failed'))));
-    const error = await api.get('/health').catch((e) => e);
+    const error = (await api.get('/health').catch((e: unknown) => e)) as ApiError;
     expect(error.code).toBe('NETWORK');
     expect(error.message).toBe('No se pudo conectar con el servidor.');
 
