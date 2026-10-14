@@ -48,3 +48,36 @@ No hay prórroga: suban avances parciales con commits pequeños durante la prueb
 | [`test-manager-library-3145555-page`](https://github.com/code-sena/test-manager-library-3145555-page) | Sitio público estático de presentación |
 | [`test-manager-library-3145555-infra`](https://github.com/code-sena/test-manager-library-3145555-infra) | Contenedores, red, volúmenes y motor de base de datos vacío |
 | [`test-manager-library-3145555-tool`](https://github.com/code-sena/test-manager-library-3145555-tool) | Utilidades: sembrador de datos de demostración |
+
+## Cómo se usa
+
+Requisitos: Node 20 o superior y la API levantada (repos `api` e `infra`).
+
+```bash
+cp .env.example .env     # VITE_API_URL apunta a la API
+npm install
+npm run dev              # http://localhost:5173
+```
+
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo en el puerto 5173 (el origen que la API permite por CORS) |
+| `npm test` | Pruebas del cliente HTTP, las rutas por rol, el acceso, el tema y el límite de 3 libros |
+| `npm run build` | Revisa los tipos y genera `dist/` |
+
+Con Docker, el repo `infra` construye este frontend con `docker compose up`.
+
+## Pantallas
+
+| Ruta | Quién | Qué hace |
+|---|---|---|
+| `/login` | todos | Inicio de sesión |
+| `/books` | admin y bibliotecaria | Catálogo con búsqueda, filtro por categoría y portadas. El admin crea, edita, da de baja y sube portadas |
+| `/members` | admin y bibliotecaria | Registro y búsqueda de socios, con sus préstamos activos |
+| `/loans/new` | admin y bibliotecaria | Prestar de 1 a 3 libros a un socio |
+| `/loans` | admin y bibliotecaria | Lista con filtros y devolución línea por línea |
+| `/overdue` | admin y bibliotecaria | Libros vencidos, con los días de retraso |
+| `/report` | solo admin | Los libros más prestados por periodo |
+| `/users` | solo admin | Dar acceso a una bibliotecaria |
+
+El token vive solo en memoria: al recargar la página hay que volver a entrar. El tema claro y oscuro (rosa) se recuerda en el navegador.
